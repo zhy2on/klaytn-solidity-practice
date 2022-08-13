@@ -65,7 +65,6 @@ contract NFTSimple {
         return false;
     }
 
-
     function isContract(address account) internal view returns (bool) {
         uint256 size;
         assembly { size := extcodesize(account) }
@@ -90,6 +89,15 @@ contract NFTSimple {
 
     function setTokenUri(uint256 id, string memory uri) public {
         tokenURIs[id] = uri;
+    }
+
+    /* 과제 */
+    function balanceOf(address owner) public view returns (uint256) {
+        return _ownedTokens[owner].length;
+    }
+
+    function burn(address owner, uint256 tokenId) public {
+        safeTransferFrom(owner, address(0), tokenId, "");
     }
 }
 
