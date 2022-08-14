@@ -2,6 +2,12 @@
 pragma solidity >=0.4.24 <=0.5.6;
 
 contract NFTSimple {
+    event Transfer(
+        address indexed from,
+        address indexed to,
+        uint256 indexed tokenId
+    );
+
     string public name = "KlayLion";
     string public symbol = "KL"; // 단위
 
@@ -97,7 +103,9 @@ contract NFTSimple {
     }
 
     function burn(address owner, uint256 tokenId) public {
-        safeTransferFrom(owner, address(0), tokenId, "");
+        require(owner == tokenOwner[tokenId], "you are not the owner of the token");
+        emit Transfer(owner, address(0), tokenId); // safeTransferFrom 으로 하면 cypress에서 _checkOnKIP17Received가 안 됨
+        _removeTokenFromList(owner, tokenId);
     }
 }
 
